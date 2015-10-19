@@ -2,10 +2,16 @@
  * Created by benoit brimeux on 01/10/15.
  */
 
+
+function exception(){
+    this.name = "Exception";
+}
+
 var Engine = function () {
     var plateau;
     var nbPiece;
     var joueurCourant;
+
 
     this.newGame = function () {
         plateau = new Array(6);
@@ -36,21 +42,10 @@ var Engine = function () {
             plateau[ligne][colonne]=joueurCourant;
             nbPiece++;
        }
+       else{
+           throw new exception();
+       }
 
-    };
-
-    var multiplicationMatrice = function(x,y){
-        var m = new Array(3);
-        for (var r = 0; r < 3; ++r) {
-            m[r] = new Array(3);
-            for (var c = 0; c < 3; ++c) {
-                m[r][c] = 0;
-                for (var i = 0; i < 3; ++i) {
-                    m[r][c] += x[r][i] * y[i][c];
-                }
-            }
-        }
-        return m;
     };
 
 
@@ -70,8 +65,6 @@ var Engine = function () {
         else{
             h = 1;
         }
-
-
 
         var tab = new Array(3);
         var tab2 = new Array(3);

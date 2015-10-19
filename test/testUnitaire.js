@@ -79,3 +79,14 @@ MonTestCase.prototype.testDeuxiemeRotation = function(){
     assertEquals(x.getterPlateau(2,0), "noir");
     assertEquals(x.getterPlateau(0,2), undefined);
 };
+
+MonTestCase.prototype.testPremiereException = function(){
+    var x = new Engine();
+    x.newGame();
+    x.jouerCoup("a1");
+    x.rotation("hg", true);
+    x.jouerCoup("a1");
+    x.rotation("hg", false);
+    assertException(function(){test = x.jouerCoup("a1")}, "Exception");
+    assertEquals(x.getterJoueurCourant(), "blanc");
+};
