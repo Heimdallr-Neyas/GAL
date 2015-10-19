@@ -57,3 +57,25 @@ MonTestCase.prototype.testDeuxiemeJoueur = function(){
     x.rotation("hg", true);
     assertEquals(x.getterJoueurCourant(), "noir");
 };
+
+MonTestCase.prototype.testDeuxiemeCoup = function(){
+    var x = new Engine();
+    x.newGame();
+    x.jouerCoup("a1");
+    x.rotation("hg", true);
+    x.jouerCoup("a1");
+    assertEquals(x.getterNbPiece(), 2);
+};
+
+MonTestCase.prototype.testDeuxiemeRotation = function(){
+    var x = new Engine();
+    x.newGame();
+    x.jouerCoup("a1");
+    x.rotation("hg", true);
+    x.jouerCoup("a1");
+    x.rotation("hg", false);
+    assertEquals(x.getterNbPiece(), 2);
+    assertEquals(x.getterPlateau(0,0), "blanc");
+    assertEquals(x.getterPlateau(2,0), "noir");
+    assertEquals(x.getterPlateau(0,2), undefined);
+};

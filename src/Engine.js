@@ -33,7 +33,7 @@ var Engine = function () {
         var ligne = x.charCodeAt(1) - 49;
 
        if(colonne<=5 && colonne>=0 && ligne>=0 && ligne <=5 && (plateau[colonne][ligne] == undefined)){
-            plateau[colonne][ligne]=joueurCourant;
+            plateau[ligne][colonne]=joueurCourant;
             nbPiece++;
        }
 
@@ -57,6 +57,7 @@ var Engine = function () {
     this.rotation = function(x, sens) {
         var v = x.charCodeAt(0);
         var h = x.charCodeAt(1);
+
         if(v == 104){
             v = 0;
         }
@@ -70,14 +71,17 @@ var Engine = function () {
             h = 1;
         }
 
-        var tab = new Array(3);
-        var matriceRotation =new Array(3);
 
+
+        var tab = new Array(3);
+        var tab2 = new Array(3);
 
         for(i=0; i<3;i++){
             tab[i] = new Array(3);
-            matriceRotation[i] = new Array(3);
+            tab2[i] = new Array(3);
+
             for(j=0; j<3; j++){
+
                 if(plateau[i+(v*3)][j+(h*3)] === "blanc"){
                     tab[i][j]=1;
                 }
@@ -87,34 +91,44 @@ var Engine = function () {
                 else{
                     tab[i][j]=0;
                 }
-                matriceRotation[i][j]=0;
-
-
             }
         }
 
 
-        matriceRotation[1][1] = 1;
+
         if(sens){
-            matriceRotation[0][2]= 1;
-            matriceRotation[2][0] = 1;
+
+            tab2[0][0] = tab[2][0];
+            tab2[0][1] = tab[1][0];
+            tab2[0][2] = tab[0][0];
+            tab2[1][0] = tab[2][1];
+            tab2[1][1] = tab[1][1];
+            tab2[1][2] = tab[0][1];
+            tab2[2][0] = tab[2][2];
+            tab2[2][1] = tab[1][2];
+            tab2[2][2] = tab[0][2];
+
         }
         else{
-            matriceRotation[0][2]= 1;
-            matriceRotation[2][0] = 1;
+            tab2[0][0] = tab[0][2];
+            tab2[0][1] = tab[1][2];
+            tab2[0][2] = tab[2][2];
+            tab2[1][0] = tab[0][1];
+            tab2[1][1] = tab[1][1];
+            tab2[1][2] = tab[2][1];
+            tab2[2][0] = tab[0][0];
+            tab2[2][1] = tab[1][0];
+            tab2[2][2] = tab[2][0];
+
         }
-
-
-        var tmp = multiplicationMatrice(tab, matriceRotation);
 
 
         for(i=0; i<3 ; i++){
             for(j=0; j<3; j++){
-                if(tmp[i][j] == 1){
-
+                if(tab2[i][j] == 1){
                     plateau[i+(v*3)][j+(h*3)]="blanc";
                 }
-                else if(tmp[i][j] == 2){
+                else if(tab2[i][j] == 2){
                     plateau[i+(v*3)][j+(h*3)]= "noir";
                 }
                 else{
