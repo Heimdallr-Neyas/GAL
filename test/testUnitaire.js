@@ -3,90 +3,151 @@
  */
 
 
-MonTestCase=TestCase("MonTestCase");
-MonTestCase.prototype.testConstructeur=function(){
+MonTestCase = TestCase("MonTestCase");
+MonTestCase.prototype.testConstructeur = function () {
 
-    var x = new Engine();
-    x.newGame();
+    var x = new Engine(), line, column;
+    x.new_game();
 
-    for(i=0;i<6; i++){
-        for(j=0;j<6; j++){
-            assertTrue(x.getterPlateau(i, j) == undefined);
+    for (line = 0; line < 6; line++) {
+        for (column = 0; column < 6; column++) {
+            assertTrue(x.get_board(line, column) === undefined);
         }
     }
-    assertTrue(x.getterNbPiece() == 0);
+    assertTrue(x.get_nb_marbles() === 0);
 };
 
-MonTestCase.prototype.testPremierJoueur=function(){
+MonTestCase.prototype.testPremierJoueur = function () {
     var x = new Engine();
-    x.newGame();
+    x.new_game();
 
-    assertTrue(x.getterJoueurCourant() == "blanc");
+    assertTrue(x.get_current_player() === "white");
 };
 
 
-MonTestCase.prototype.testPremierCoup = function(){
+MonTestCase.prototype.testPremierCoup = function () {
     var x = new Engine();
-    x.newGame();
-    x.jouerCoup("a1");
+    x.new_game();
+    x.play_stroke("a1");
 
-    assertEquals(x.getterPlateau(0,0), "blanc");
+    assertEquals(x.get_board(0, 0), "white");
 };
 
-MonTestCase.prototype.testNbPiece = function(){
+MonTestCase.prototype.testNbPiece = function () {
     var x = new Engine();
-    x.newGame();
-    x.jouerCoup("a1");
-    assertTrue(x.getterNbPiece()==1);
-  };
-
-
-MonTestCase.prototype.testPremiereRotation = function(){
-    var x = new Engine();
-    x.newGame();
-    x.jouerCoup("a1");
-    x.rotation("hg", true);
-    assertEquals(x.getterPlateau(0,2), "blanc");
-    assertEquals(x.getterPlateau(0,0), undefined);
+    x.new_game();
+    x.play_stroke("a1");
+    assertTrue(x.get_nb_marbles() === 1);
 };
 
-MonTestCase.prototype.testDeuxiemeJoueur = function(){
+
+MonTestCase.prototype.testPremiereRotation = function () {
     var x = new Engine();
-    x.newGame();
-    x.jouerCoup("a1");
-    x.rotation("hg", true);
-    assertEquals(x.getterJoueurCourant(), "noir");
+    x.new_game();
+    x.play_stroke("a1");
+    x.rotation(0, 0, true);
+    assertEquals(x.get_board(0, 2), "white");
+    assertEquals(x.get_board(0, 0), undefined);
 };
 
-MonTestCase.prototype.testDeuxiemeCoup = function(){
+MonTestCase.prototype.testDeuxiemeJoueur = function () {
     var x = new Engine();
-    x.newGame();
-    x.jouerCoup("a1");
-    x.rotation("hg", true);
-    x.jouerCoup("a1");
-    assertEquals(x.getterNbPiece(), 2);
+    x.new_game();
+    x.play_stroke("a1");
+    x.rotation(0, 0, true);
+    assertEquals(x.get_current_player(), "black");
 };
 
-MonTestCase.prototype.testDeuxiemeRotation = function(){
+MonTestCase.prototype.testDeuxiemeCoup = function () {
     var x = new Engine();
-    x.newGame();
-    x.jouerCoup("a1");
-    x.rotation("hg", true);
-    x.jouerCoup("a1");
-    x.rotation("hg", false);
-    assertEquals(x.getterNbPiece(), 2);
-    assertEquals(x.getterPlateau(0,0), "blanc");
-    assertEquals(x.getterPlateau(2,0), "noir");
-    assertEquals(x.getterPlateau(0,2), undefined);
+    x.new_game();
+    x.play_stroke("a1");
+    x.rotation(0, 0, true);
+    x.play_stroke("a1");
+    assertEquals(x.get_nb_marbles(), 2);
 };
 
-MonTestCase.prototype.testPremiereException = function(){
+MonTestCase.prototype.testDeuxiemeRotation = function () {
     var x = new Engine();
-    x.newGame();
-    x.jouerCoup("a1");
-    x.rotation("hg", true);
-    x.jouerCoup("a1");
-    x.rotation("hg", false);
-    assertException(function(){test = x.jouerCoup("a1")}, "Exception");
-    assertEquals(x.getterJoueurCourant(), "blanc");
+    x.new_game();
+    x.play_stroke("a1");
+    x.rotation(0, 0, true);
+    x.play_stroke("a1");
+    x.rotation(0, 0, false);
+    assertEquals(x.get_nb_marbles(), 2);
+    assertEquals(x.get_board(0, 0), "white");
+    assertEquals(x.get_board(2, 0), "black");
+    assertEquals(x.get_board(0, 2), undefined);
+};
+
+MonTestCase.prototype.testPremiereException = function () {
+    var x = new Engine();
+    x.new_game();
+    x.play_stroke("a1");
+    x.rotation(0, 0, true);
+    x.play_stroke("a1");
+    x.rotation(0, 0, false);
+    assertException(function () {
+        x.play_stroke("a1");
+    }, "Exception");
+    assertEquals(x.get_current_player(), "white");
+};
+
+MonTestCase.prototype.testPremierJeu = function () {
+    var x = new Engine();
+    x.new_game();
+    x.play_stroke("a1");
+    x.rotation(0, 0, true);
+    x.play_stroke("a1");
+    x.rotation(0, 0, false);
+    x.play_stroke("b1");
+    x.rotation(0, 0, true);
+    x.play_stroke("a2");
+    x.rotation(0, 0, false);
+    x.play_stroke("c1");
+    x.rotation(0, 0, true);
+    x.play_stroke("a3");
+    x.rotation(0, 0, false);
+    x.play_stroke("d1");
+    x.rotation(0, 1, false);
+    x.play_stroke("f3");
+    x.rotation(0, 1, true);
+
+    assertEquals(x.get_nb_marbles(), 8);
+
+    assertEquals(x.get_board(0, 0), "white");
+    assertEquals(x.get_board(0, 1), "white");
+    assertEquals(x.get_board(0, 2), "white");
+    assertEquals(x.get_board(0, 3), "white");
+
+    assertEquals(x.get_board(2, 0), "black");
+    assertEquals(x.get_board(2, 1), "black");
+    assertEquals(x.get_board(2, 2), "black");
+    assertEquals(x.get_board(2, 3), "black");
+
+};
+
+MonTestCase.prototype.testDeuxiemeJeu = function () {
+    var x = new Engine();
+    x.new_game();
+    x.play_stroke("a1");
+    x.rotation(0, 0, true);
+    x.play_stroke("a1");
+    x.rotation(0, 0, false);
+    x.play_stroke("b1");
+    x.rotation(0, 0, true);
+    x.play_stroke("a2");
+    x.rotation(0, 0, false);
+    x.play_stroke("c1");
+    x.rotation(0, 0, true);
+    x.play_stroke("a3");
+    x.rotation(0, 0, false);
+    x.play_stroke("d1");
+    x.rotation(0, 1, false);
+    x.play_stroke("f3");
+    x.rotation(0, 1, true);
+    assertEquals(x.get_win(), false);
+    x.play_stroke("e1");
+    assertEquals(x.get_win(), true);
+
 };
