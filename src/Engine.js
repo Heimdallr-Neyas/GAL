@@ -65,58 +65,27 @@ var Engine = function () {
     };
 
     this.check_colum_win = function (line, column) {
-        var cpt = 0;
-
-        cpt = this.get_nb_stroke(line, column, 0, -1);
-        cpt = cpt + this.get_nb_stroke(line, column, 0, 1);
-
-        if (cpt - 1 >= 5) {
-            return true;
-        }
-        return false;
+        return (this.get_nb_stroke(line, column, 0, -1) +
+            this.get_nb_stroke(line, column, 0, 1) - 1 >= 5);
     };
 
     this.check_line_win = function (line, column) {
-        var cpt = 0;
-
-        cpt = this.get_nb_stroke(line, column, -1, 0);
-        cpt = cpt + this.get_nb_stroke(line, column, 1, 0);
-
-        if (cpt - 1 >= 5) {
-            return true;
-        }
-        return false;
+        return (this.get_nb_stroke(line, column, -1, 0) +
+            this.get_nb_stroke(line, column, 1, 0) - 1 >= 5);
     };
 
     this.check_diagonal_win = function (line, column) {
-        var cpt = 0;
-
-        cpt = this.get_nb_stroke(line, column, -1, -1);
-        cpt = cpt + this.get_nb_stroke(line, column, 1, 1);
-
-        if (cpt - 1 >= 5) {
-            return true;
-        }
-        return false;
-    };
-
-    this.check_reverse_diagonal_win = function (line, column) {
-        var cpt = 0;
-
-        cpt = this.get_nb_stroke(line, column, 1, -1);
-        cpt = cpt + this.get_nb_stroke(line, column, -1, 1);
-
-        if (cpt - 1 >= 5) {
-            return true;
-        }
-        return false;
+        return (this.get_nb_stroke(line, column, -1, -1) +
+            this.get_nb_stroke(line, column, 1, 1) - 1 >= 5) ||
+            (this.get_nb_stroke(line, column, 1, -1) +
+            this.get_nb_stroke(line, column, -1, 1) - 1 >= 5);
     };
 
     this.check_win = function (stroke) {
         var column = stroke.charCodeAt(0) - 97, line = stroke.charCodeAt(1) - 49;
-        win = this.check_colum_win(line, column) || this.check_line_win(line, column);
-        win = win || this.check_diagonal_win(line, column);
-        win = win || this.check_reverse_diagonal_win(line, column);
+        win = (this.check_colum_win(line, column) ||
+        this.check_line_win(line, column) ||
+        this.check_diagonal_win(line, column));
     };
 
     this.rotation_array = function (tempory_array, tempory_array2, direction) {
