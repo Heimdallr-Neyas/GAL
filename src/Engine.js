@@ -8,16 +8,20 @@ function Exception() {
 }
 
 var Engine = function () {
-    var board, n_marbles, current_player, win;
-    this.new_game = function () {
+    var board, n_marbles, current_player, win, drawn;
+    this.new_game = function (player) {
         var line;
         board = new Array(6);
         for (line = 0; line < 6; line++) {
             board[line] = new Array(6);
         }
         n_marbles = 0;
-        current_player = "white";
+        current_player = player;
         win = false;
+    };
+
+    this.get_drawn = function () {
+        return drawn;
     };
 
     this.get_board = function (line, column) {
@@ -48,6 +52,7 @@ var Engine = function () {
         }
 
         this.check_win(stroke);
+        this.check_drawn();
     };
 
     this.get_nb_stroke = function (line, column, increment_line, increment_column) {
@@ -134,6 +139,43 @@ var Engine = function () {
             current_player = "black";
         } else {
             current_player = "white";
+        }
+    };
+
+    this.rotation_text = function (text) {
+        var cycle, top, left;
+        cycle = (text[0] === 'c');
+        if (text[1] === 't') { top = 0;
+            } else { top = 1; }
+        if (text[2] === 'l') { left = 0;
+            } else { left = 1; }
+        this.rotation(top, left, cycle);
+    };
+
+    this.play_strokes = function (string_stroke) {
+        //"c4cbl ;d4abr ;c3ctl ;c3ctl ;c4cbl ;e5cbr ;b1ctl ;b2ctr ;c4cbl ;c3")
+        var array = string_stroke.split(new RegExp(" ;", "g")), i, stroke, rotation;
+        for (i = 0; i < array.length; i++) {
+            if (array[i].length === 5) {
+                stroke = array[i][0].concat(array[i][1]);
+                this.play_stroke(stroke);
+                rotation = (array[i][2].concat(array[i][3])).concat(array[i][4]);
+                this.rotation_text(rotation);
+            } else {
+                stroke = array[i][0].concat(array[i][1]);
+                this.play_stroke(stroke);
+            }
+        }
+
+    };
+
+    this.check_drawn = function () {
+        var line, column;
+        drawn = true;
+        for (line = 0; line < 6; line++) {
+            for (column = 0; column < 6; column++) {
+                drawn = drawn && (board[line][column] !== undefined);
+            }
         }
     };
 
