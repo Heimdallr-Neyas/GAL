@@ -4,7 +4,11 @@
 
 
 function Exception() {
-    this.name = "Exception";
+    this.name = "Exception, pierre deja presente";
+}
+
+function Exception2() {
+    this.name = "Exception, couleur non valide";
 }
 
 var Engine = function () {
@@ -40,13 +44,17 @@ var Engine = function () {
         return win;
     };
 
-    this.play_stroke = function (stroke) {
+    this.play_stroke = function (stroke, color) {
         var column = stroke.charCodeAt(0) - 97, line = stroke.charCodeAt(1) - 49;
 
         if (column <= 5 && column >= 0 && line >= 0 &&
                 line <= 5 && (board[line][column] === undefined)) {
-            board[line][column] = current_player;
-            n_marbles++;
+            if (color === current_player) {
+                board[line][column] = current_player;
+                n_marbles++;
+            } else {
+                throw new Exception2();
+            }
         } else {
             throw new Exception();
         }
@@ -169,6 +177,7 @@ var Engine = function () {
         }
         this.rotation_array(tempory_array, tempory_array2, direction);
         this.copy_array(board, tempory_array2, (vertical * 3), (horizontal * 3));
+        this.check_win();
         this.change_player();
     };
 
@@ -179,6 +188,7 @@ var Engine = function () {
         } else {
             current_player = "white";
         }
+        this.check_win();
     };
 
     this.rotation_text = function (text) {
@@ -197,12 +207,12 @@ var Engine = function () {
         for (i = 0; i < array.length; i++) {
             if (array[i].length === 5) {
                 stroke = array[i][0].concat(array[i][1]);
-                this.play_stroke(stroke);
+                this.play_stroke(stroke, current_player);
                 rotation = (array[i][2].concat(array[i][3])).concat(array[i][4]);
                 this.rotation_text(rotation);
             } else {
                 stroke = array[i][0].concat(array[i][1]);
-                this.play_stroke(stroke);
+                this.play_stroke(stroke, current_player);
             }
         }
 

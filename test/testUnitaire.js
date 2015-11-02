@@ -26,7 +26,7 @@ MonTestCase.prototype.test_deuxiemeHistoire = function () {
 
 
 MonTestCase.prototype.test_troisiemeHistoire = function () {
-    x.play_stroke("a1");
+    x.play_stroke("a1", "white");
     assertEquals(x.get_board(0, 0), "white");
 };
 
@@ -48,7 +48,7 @@ MonTestCase.prototype.test_sixiemeHistoire = function () {
 // TP2
 
 MonTestCase.prototype.test_septiemeHistoire = function () {
-    x.play_stroke("a1");
+    x.play_stroke("a1", "black");
     assertEquals(x.get_nb_marbles(), 2);
 };
 
@@ -62,8 +62,8 @@ MonTestCase.prototype.test_huitiemeHistoire = function () {
 
 MonTestCase.prototype.test_neuviemeHistoire = function () {
     assertException(function () {
-        x.play_stroke("a1");
-    }, "Exception");
+        x.play_stroke("a1", "white");
+    }, "Exception, pierre deja presente");
     assertEquals(x.get_board(0, 0), "white");
     assertEquals(x.get_board(2, 0), "black");
     assertEquals(x.get_board(0, 2), undefined);
@@ -71,17 +71,17 @@ MonTestCase.prototype.test_neuviemeHistoire = function () {
 };
 
 MonTestCase.prototype.test_dixiemeHistoire = function () {
-    x.play_stroke("b1");
+    x.play_stroke("b1", "white");
     x.rotation(0, 0, true);
-    x.play_stroke("a2");
+    x.play_stroke("a2", "black");
     x.rotation(0, 0, false);
-    x.play_stroke("c1");
+    x.play_stroke("c1", "white");
     x.rotation(0, 0, true);
-    x.play_stroke("a3");
+    x.play_stroke("a3", "black");
     x.rotation(0, 0, false);
-    x.play_stroke("d1");
+    x.play_stroke("d1", "white");
     x.rotation(0, 1, false);
-    x.play_stroke("f3");
+    x.play_stroke("f3", "black");
     x.rotation(0, 1, true);
 
     assertEquals(x.get_nb_marbles(), 8);
@@ -100,24 +100,24 @@ MonTestCase.prototype.test_dixiemeHistoire = function () {
 MonTestCase.prototype.test_OnziemeHistoire = function () {
     var x = new Engine();
     x.new_game("white");
-    x.play_stroke("a1");
+    x.play_stroke("a1",  "white");
     x.rotation(0, 0, true);
-    x.play_stroke("a1");
+    x.play_stroke("a1", "black");
     x.rotation(0, 0, false);
-    x.play_stroke("b1");
+    x.play_stroke("b1",  "white");
     x.rotation(0, 0, true);
-    x.play_stroke("a2");
+    x.play_stroke("a2", "black");
     x.rotation(0, 0, false);
-    x.play_stroke("c1");
+    x.play_stroke("c1",  "white");
     x.rotation(0, 0, true);
-    x.play_stroke("a3");
+    x.play_stroke("a3", "black");
     x.rotation(0, 0, false);
-    x.play_stroke("d1");
+    x.play_stroke("d1",  "white");
     x.rotation(0, 1, false);
-    x.play_stroke("f3");
+    x.play_stroke("f3", "black");
     x.rotation(0, 1, true);
     assertEquals(x.get_win(), false);
-    x.play_stroke("e1");
+    x.play_stroke("e1",  "white");
     assertEquals(x.get_win(), true);
 
 };
@@ -153,4 +153,11 @@ MonTestCase.prototype.test_quatorziemeHistoire = function () {
     x.play_strokes("b6ctl ;e5ctr ;d6ctl ;c6ctr ;f6ctl ;e6ctr");
     assertEquals(x.get_win(), false);
     assertEquals(x.get_drawn(), true);
+};
+
+MonTestCase.prototype.test_quinziemeHistoire = function () {
+    x.new_game("white");
+    assertException(function () {
+        x.play_stroke("a1", "black");
+    }, "Exception, couleur non valide");
 };
