@@ -18,17 +18,7 @@ var Engine = function () {
     var board, n_marbles, current_player, win, drawn, nb_player, size_board, colorList;
     this.new_game = function (player, nb_player1, xl1) {
         nb_player = nb_player1;
-        if (nb_player1 === 2) {
-            colorList = new Array(2);
-            colorList[0] = "white";
-            colorList[1] = "black";
-        } else if (nb_player1 === 4) {
-            colorList = new Array(4);
-            colorList[0] = "red";
-            colorList[1] = "yellow";
-            colorList[2] = "green";
-            colorList[3] = "blue";
-        }
+        this.color(nb_player1, player);
         if (xl1) {
             size_board = 9;
         } else { size_board = 6; }
@@ -42,6 +32,26 @@ var Engine = function () {
         win = false;
     };
 
+    this.color = function (nb_player1, player) {
+        if (nb_player1 === 2) {
+            colorList = new Array(2);
+            colorList[0] = "white";
+            colorList[1] = "black";
+        } else if (nb_player1 === 4) {
+            colorList = new Array(4);
+            colorList[0] = "red";
+            colorList[1] = "yellow";
+            colorList[2] = "green";
+            colorList[3] = "blue";
+        } else if (nb_player1 === 3) {
+            colorList = new Array(3);
+            colorList[0] = player;
+        }
+    };
+
+    this.push_joueur = function (color, num) {
+        colorList[num - 1] = color;
+    };
 
     this.get_drawn = function () {
         return drawn;
@@ -66,8 +76,8 @@ var Engine = function () {
     this.play_stroke = function (stroke, color) {
         var column = stroke.charCodeAt(0) - 97, line = stroke.charCodeAt(1) - 49;
 
-        if (column <= (size_board-1) && column >= 0 && line >= 0 &&
-                line <= (size_board-1) && (board[line][column] === undefined)) {
+        if (column <= (size_board - 1) && column >= 0 && line >= 0 &&
+                line <= (size_board - 1) && (board[line][column] === undefined)) {
             if (color === current_player) {
                 board[line][column] = current_player;
                 n_marbles++;

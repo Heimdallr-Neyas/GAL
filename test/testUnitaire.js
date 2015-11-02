@@ -182,3 +182,11 @@ MonTestCase.prototype.test_dix_septiemeHistoire = function () {
     assertEquals(x.get_current_player(), "blue");
 
 };
+
+MonTestCase.prototype.test_dix_huitiemeHistoire = function () {
+    x = new Engine();
+    x.new_game("red", 3, true);
+    x.push_joueur("green", 2);
+    x.push_joueur("yellow", 3);
+
+};
