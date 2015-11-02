@@ -161,3 +161,8 @@ MonTestCase.prototype.test_quinziemeHistoire = function () {
         x.play_stroke("a1", "black");
     }, "Exception, couleur non valide");
 };
+
+MonTestCase.prototype.test_quinziemeHistoire = function () {
+    x.new_game("red", 4, true);
+};
+

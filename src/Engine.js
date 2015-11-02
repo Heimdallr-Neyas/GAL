@@ -12,12 +12,16 @@ function Exception2() {
 }
 
 var Engine = function () {
-    var board, n_marbles, current_player, win, drawn;
-    this.new_game = function (player) {
+    var board, n_marbles, current_player, win, drawn, nb_player, size_board;
+    this.new_game = function (player, nb_player1, xl1) {
+        nb_player = nb_player1;
+        if (xl1) {
+            size_board = 9;
+        } else { size_board = 6;}
         var line;
-        board = new Array(6);
-        for (line = 0; line < 6; line++) {
-            board[line] = new Array(6);
+        board = new Array(size_board);
+        for (line = 0; line < size_board; line++) {
+            board[line] = new Array(size_board);
         }
         n_marbles = 0;
         current_player = player;
@@ -47,8 +51,8 @@ var Engine = function () {
     this.play_stroke = function (stroke, color) {
         var column = stroke.charCodeAt(0) - 97, line = stroke.charCodeAt(1) - 49;
 
-        if (column <= 5 && column >= 0 && line >= 0 &&
-                line <= 5 && (board[line][column] === undefined)) {
+        if (column <= (size_board-1) && column >= 0 && line >= 0 &&
+                line <= (size_board-1) && (board[line][column] === undefined)) {
             if (color === current_player) {
                 board[line][column] = current_player;
                 n_marbles++;
@@ -82,7 +86,7 @@ var Engine = function () {
 
     this.check_colums_win = function () {
         var column;
-        for (column = 0; column < 6; column++) {
+        for (column = 0; column < size_board; column++) {
             if (this.check_column_win(column) >= 5) {
                 return true;
             }
@@ -92,14 +96,14 @@ var Engine = function () {
 
     this.check_column_win = function (column) {
         var line, cpt = 0;
-        for (line = 0; line < 6; line++) {
+        for (line = 0; line < size_board; line++) {
             cpt = this.check_equals(line, column, cpt);
         }
         return cpt;
     };
     this.check_lines_win = function () {
         var line;
-        for (line = 0; line < 6; line++) {
+        for (line = 0; line < size_board; line++) {
             if (this.check_line_win(line) >= 5) {
                 return true;
             }
@@ -109,22 +113,22 @@ var Engine = function () {
 
     this.check_line_win = function (line) {
         var column, cpt = 0;
-        for (column = 0; column < 6; column++) {
+        for (column = 0; column < size_board; column++) {
             cpt = this.check_equals(line, column, cpt);
         }
         return cpt;
     };
 
-    this.check_diagonals_win = function () {
+    this.check_diagonals_win = function () { // a faire modifiction pour plateau 9*9
         var line, cpt1 = 0, cpt2 = 0, cpt3 = 0, cpt4 = 0, cpt5 = 0, cpt6 = 0;
-        for (line = 0; line < 6; line++) {
+        for (line = 0; line < size_board; line++) {
             cpt1 = this.check_equals(line, line, cpt1);
-            cpt2 = this.check_equals((5 - line), line, cpt2);
-            if (line < 5) {
+            cpt2 = this.check_equals((size_board - 1 - line), line, cpt2);
+            if (line < (size_board - 1)) {
                 cpt3 = this.check_equals(line, (line + 1), cpt3);
                 cpt4 = this.check_equals((line + 1), line, cpt4);
-                cpt5 = this.check_equals((5 - line), (line + 1), cpt5);
-                cpt6 = this.check_equals((4 - line), line, cpt6);
+                cpt5 = this.check_equals((size_board - 1 - line), (line + 1), cpt5);
+                cpt6 = this.check_equals((size_board - 2 - line), line, cpt6);
             }
         }
         return (this.max(this.max(this.max(this.max(this.max(cpt1, cpt2), cpt3), cpt4),
