@@ -51,46 +51,85 @@ var Engine = function () {
             throw new Exception();
         }
 
-        this.check_win(stroke);
+        this.check_win();
         this.check_drawn();
     };
 
-    this.get_nb_stroke = function (line, column, increment_line, increment_column) {
-        var tmp_line = line, tmp_column = column, cpt = 1;
-        while ((tmp_column + increment_column) >= 0 && (tmp_column + increment_column) <= 5 &&
-                (tmp_line + increment_line) >= 0 && (tmp_line + increment_line) <= 5 &&
-                board[tmp_line][tmp_column] ===
-                board[tmp_line + increment_line][tmp_column + increment_column]) {
-            cpt++;
-            tmp_column = tmp_column + increment_column;
-            tmp_line = tmp_line + increment_line;
+    this.check_equals = function (line, column, value) {
+        if (board[line][column] === current_player) {
+            return (value + 1);
         }
+        if (value >= 5) {
+            return value;
+        }
+        return 0;
+    };
 
+    this.max = function (value1, value2) {
+        if (value1 > value2) {
+            return value1;
+        }
+        return value2;
+    };
+
+    this.check_colums_win = function () {
+        var column;
+        for (column = 0; column < 6; column++) {
+            if (this.check_column_win(column) >= 5) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    this.check_column_win = function (column) {
+        var line, cpt = 0;
+        for (line = 0; line < 6; line++) {
+            cpt = this.check_equals(line, column, cpt);
+        }
+        return cpt;
+    };
+    this.check_lines_win = function () {
+        var line;
+        for (line = 0; line < 6; line++) {
+            if (this.check_line_win(line) >= 5) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    this.check_line_win = function (line) {
+        var column, cpt = 0;
+        for (column = 0; column < 6; column++) {
+            cpt = this.check_equals(line, column, cpt);
+        }
         return cpt;
     };
 
-    this.check_colum_win = function (line, column) {
-        return (this.get_nb_stroke(line, column, 0, -1) +
-            this.get_nb_stroke(line, column, 0, 1) - 1 >= 5);
+    this.check_diagonals_win = function () {
+        var line, cpt1 = 0, cpt2 = 0, cpt3 = 0, cpt4 = 0, cpt5 = 0, cpt6 = 0;
+        for (line = 0; line < 6; line++) {
+            cpt1 = this.check_equals(line, line, cpt1);
+            cpt2 = this.check_equals((5 - line), line, cpt2);
+            if (line < 5) {
+                cpt3 = this.check_equals(line, (line + 1), cpt3);
+                cpt4 = this.check_equals((line + 1), line, cpt4);
+                cpt5 = this.check_equals((5 - line), (line + 1), cpt5);
+                cpt6 = this.check_equals((4 - line), line, cpt6);
+            }
+        }
+        return (this.max(this.max(this.max(this.max(this.max(cpt1, cpt2), cpt3), cpt4),
+            cpt5), cpt6) >= 5);
     };
 
-    this.check_line_win = function (line, column) {
-        return (this.get_nb_stroke(line, column, -1, 0) +
-            this.get_nb_stroke(line, column, 1, 0) - 1 >= 5);
-    };
 
-    this.check_diagonal_win = function (line, column) {
-        return (this.get_nb_stroke(line, column, -1, -1) +
-            this.get_nb_stroke(line, column, 1, 1) - 1 >= 5) ||
-            (this.get_nb_stroke(line, column, 1, -1) +
-            this.get_nb_stroke(line, column, -1, 1) - 1 >= 5);
-    };
 
-    this.check_win = function (stroke) {
-        var column = stroke.charCodeAt(0) - 97, line = stroke.charCodeAt(1) - 49;
-        win = (this.check_colum_win(line, column) ||
-        this.check_line_win(line, column) ||
-        this.check_diagonal_win(line, column));
+
+    this.check_win = function () {
+        win = (this.check_colums_win() ||
+        this.check_lines_win() ||
+        this.check_diagonals_win());
     };
 
     this.rotation_array = function (tempory_array, tempory_array2, direction) {
