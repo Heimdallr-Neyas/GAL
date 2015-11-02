@@ -14,7 +14,7 @@ MonTestCase.prototype.test_premiereHistoire = function () {
 
 MonTestCase.prototype.test_deuxiemeHistoire = function () {
     var line, column;
-    x.new_game("white");
+    x.new_game("white", 2, false);
     for (line = 0; line < 6; line++) {
         for (column = 0; column < 6; column++) {
             assertTrue(x.get_board(line, column) === undefined);
@@ -99,7 +99,7 @@ MonTestCase.prototype.test_dixiemeHistoire = function () {
 
 MonTestCase.prototype.test_OnziemeHistoire = function () {
     var x = new Engine();
-    x.new_game("white");
+    x.new_game("white", 2, false);
     x.play_stroke("a1",  "white");
     x.rotation(0, 0, true);
     x.play_stroke("a1", "black");
@@ -124,7 +124,7 @@ MonTestCase.prototype.test_OnziemeHistoire = function () {
 
 MonTestCase.prototype.test_douziemeHistoire = function () {
     var x = new Engine();
-    x.new_game("white");
+    x.new_game("white", 2, false);
     x.play_strokes("c4cbl ;d4abr ;c3ctl ;c3ctl ;c4cbl ;e5cbr ;b1ctl ;b2ctr ;c4cbl ;c3");
     assertEquals(x.get_board(0, 0), "black");
     assertEquals(x.get_board(1, 1), "black");
@@ -144,7 +144,8 @@ MonTestCase.prototype.test_treziemeHistoire = function () {
 };
 
 MonTestCase.prototype.test_quatorziemeHistoire = function () {
-    x.new_game("white");
+    x = new Engine();
+    x.new_game("white", 2, false);
     x.play_strokes("a1cbl ;d1cbr ;b1cbl ;e1cbr ;c1cbl ;f1cbr");
     x.play_strokes("a2cbl ;d2cbr ;b2cbl ;e2cbr ;c2cbl ;f2cbr");
     x.play_strokes("a3cbl ;d3cbr ;b3cbl ;e3cbr ;c3cbl ;f3cbr");
@@ -156,13 +157,28 @@ MonTestCase.prototype.test_quatorziemeHistoire = function () {
 };
 
 MonTestCase.prototype.test_quinziemeHistoire = function () {
-    x.new_game("white");
+    x = new Engine();
+    x.new_game("white", 2, false);
     assertException(function () {
         x.play_stroke("a1", "black");
     }, "Exception, couleur non valide");
 };
 
 MonTestCase.prototype.test_quinziemeHistoire = function () {
+    x = new Engine();
     x.new_game("red", 4, true);
 };
 
+MonTestCase.prototype.test_dix_septiemeHistoire = function () {
+    assertEquals(x.get_current_player(), "red");
+    x.play_stroke("a1", "red");
+    x.rotation(0, 0, true);
+    assertEquals(x.get_current_player(), "yellow");
+    x.play_stroke("a2", "yellow");
+    x.rotation(0, 0, true);
+    assertEquals(x.get_current_player(), "green");
+    x.play_stroke("a3", "green");
+    x.rotation(0, 0, true);
+    assertEquals(x.get_current_player(), "blue");
+
+};

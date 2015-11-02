@@ -11,13 +11,27 @@ function Exception2() {
     this.name = "Exception, couleur non valide";
 }
 
+
+
+
 var Engine = function () {
-    var board, n_marbles, current_player, win, drawn, nb_player, size_board;
+    var board, n_marbles, current_player, win, drawn, nb_player, size_board, colorList;
     this.new_game = function (player, nb_player1, xl1) {
         nb_player = nb_player1;
+        if (nb_player1 === 2) {
+            colorList = new Array(2);
+            colorList[0] = "white";
+            colorList[1] = "black";
+        } else if (nb_player1 === 4) {
+            colorList = new Array(4);
+            colorList[0] = "red";
+            colorList[1] = "yellow";
+            colorList[2] = "green";
+            colorList[3] = "blue";
+        }
         if (xl1) {
             size_board = 9;
-        } else { size_board = 6;}
+        } else { size_board = 6; }
         var line;
         board = new Array(size_board);
         for (line = 0; line < size_board; line++) {
@@ -27,6 +41,7 @@ var Engine = function () {
         current_player = player;
         win = false;
     };
+
 
     this.get_drawn = function () {
         return drawn;
@@ -187,11 +202,13 @@ var Engine = function () {
 
 
     this.change_player = function () {
-        if (current_player === "white") {
-            current_player = "black";
-        } else {
-            current_player = "white";
+        var position = colorList.indexOf(current_player);
+
+        position++;
+        if (position === colorList.length) {
+            position = 0;
         }
+        current_player = colorList[position];
         this.check_win();
     };
 
